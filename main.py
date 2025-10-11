@@ -246,14 +246,25 @@
 #         return {"error": "Error occured during invoking Agent!"}
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from Routers.ai import agent
 from Routers.auth import auth
 
 app = FastAPI()
 
+# add routers
 app.include_router(agent)
 app.include_router(auth)
+
+# allow cors
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or ["*"] to allow all
+    allow_credentials=True,
+    allow_methods=["*"],  # allow POST, GET, OPTIONS etc.
+    allow_headers=["*"],  # allow Authorization, Content-Type etc.
+)
 
 # ===== Router ===== #
 # welcome router
