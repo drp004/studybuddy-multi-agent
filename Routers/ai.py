@@ -30,7 +30,7 @@ async def doc_notes(doc: Annotated[UploadFile, File()], access: bool = Depends(g
     """ This route will receive document (txt, pdf, jpg, etc.) & generate notes from it"""
 
     if not access:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
 
     try:
         if doc:
@@ -73,7 +73,7 @@ async def doc_notes(doc: Annotated[UploadFile, File()], access: bool = Depends(g
         
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during text extraction from doc; \nTraceback: {traceback.format_exc()}")
-        return {"error": "Error occured during doc notes generaion!"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured during doc notes generaion!")
 
 
 # notes from yt_transcript
@@ -82,7 +82,7 @@ async def yt_notes(user_input: Annotated[str, Form()], access: bool = Depends(ge
     """ This route will yt video link & generate notes from yt video transcript """
 
     if not access:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="INvalid or Expired Token!")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="INvalid or Expired Token!")
 
     try:
         # getting yt-transcript
@@ -110,7 +110,7 @@ async def yt_notes(user_input: Annotated[str, Form()], access: bool = Depends(ge
 
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during yt-notes generation; \nTraceback: {traceback.format_exc()}")
-        return {"error": "error while processing yt-video"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="error while processing yt-video")
 
 
 # audio summary
@@ -119,7 +119,7 @@ async def audio_summary(audio: Annotated[UploadFile, File()], access: bool = Dep
     """ This route will receive audio and & give summary """
 
     if not access:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
 
     try:
         print(f"\nTime: [{datetime.now()}]; Audio file received!")
@@ -153,7 +153,7 @@ async def audio_summary(audio: Annotated[UploadFile, File()], access: bool = Dep
 
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured in audio summary; \nTraceback: {traceback.format_exc()}")
-        return {"error": "Error occured in audio summary"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured in audio summary!")
     
 
 # career path guide
@@ -162,7 +162,7 @@ async def career_guide(user_skills: Annotated[str, Form()], user_edu: Annotated[
     """ This route will generate career path """
     
     if not access:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or Expired Token!")
 
     try:
         print(f"\nTime: [{datetime.now()}]; User input Received!")
@@ -181,4 +181,4 @@ async def career_guide(user_skills: Annotated[str, Form()], user_edu: Annotated[
     
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during generating career path; \nTraceback: {traceback.format_exc()}")
-        return {"error": "Error occured during invoking Agent!"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured during invoking Agent!") 

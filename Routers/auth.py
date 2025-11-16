@@ -20,14 +20,14 @@ async def register(user_data: register_user):
     # check user exist with same email
     db_user = await get_user(user_data.get("email"))
     if db_user:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User exist with {user_data.get('email')}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User exist with {user_data.get('email')}")
 
     # create user 
     result = await add_user(user_data)
 
     # return status
     if result.lower() == "failed":
-        return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="User not created!")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="User not created!")
     
     # if user created then create & return access token
     access_token = create_token({"sub": user_data.get("email")})
@@ -46,7 +46,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     db_user = await get_user(user_data.get("email"))
 
     if not db_user or not verify_password(user_data.get("password"), db_user.get("password")):
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
     
     access_token = create_token({"sub": user_data.get("email")})
 
