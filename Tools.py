@@ -49,25 +49,42 @@ async def extract_txt_text(txt: UploadFile):
 
 # YT transcript extracting tool
 async def extract_yt_transcript(yt_link: str):
+    """ Use this tool only for getting youtube video transcribe """
     try:
+        # Step 1: Download audio from YouTube
+        cookie = "cookies.txt"
+
         ydl_opts = {
-            "format": "bestaudio[ext=m4a]",  # downloads as .m4a (no conversion)
+            "format": "bestaudio/best",  # downloads as .m4a (no conversion)
             "outtmpl": "%(title)s.%(ext)s",
-            # "cookiefile": cookie
+            "cookiefile": cookie,
+            'concurrent_fragment_downloads': 20,
+            'socket_timeout': 60,           # Increase timeout to 60s
+            'retries': 10,                  
+            'postprocessors': [
+                {  
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }
+            ]
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(yt_link, download=True)
-            filename = ydl.prepare_filename(info)
+            info = ydl.extract_info(yt_link, download=True)  # download = True actually downloads it
+            filename = ydl.prepare_filename(info)        # full path before conversion
+            filename = filename[:-1] + "3"               # formating filename
+            print(f"\n✅ Audio downloaded as: {filename}")
+            print(f"🕒 Duration: {info['duration']} seconds")
 
-        # Step 2: Transcribe with AssemblyAI
+        # # Step 2: Transcribe with AssemblyAI
+        print("\nTranscribing Audio...")
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(filename)
 
         os.remove(filename)
-        # print(transcript.text)
 
-        return  {"transcript": transcript.text}
+        return {"transcript": transcript.text}
 
     except Exception as e:
         print(f"Time: [{datetime.now()}]; Error Occured during Audio transcribing; \nTraceback: {traceback.format_exc()}")

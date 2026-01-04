@@ -1,29 +1,29 @@
-langgraph
-langchain
-langchain_cerebras
-langchain_community
-langsmith
+langgraph==0.6.8
+langchain==0.6.8
+langchain_cerebras==0.5.0
+langchain_community==0.3.30
+langsmith==0.4.32
 
-fastapi[standard]
-uvicorn[standard]
+fastapi[standard]==0.118.0
+uvicorn[standard]==0.37.0
 
-pydantic
+pydantic==2.11.10
 
-python-dotenv
+python-dotenv==1.1.1
 
-PyMuPDF
+PyMuPDF==1.26.4
 
-opencv-python
-pytesseract
-numpy
+opencv-python==4.12.0.88
+pytesseract==0.3.13
+numpy==2.2.6
 
-yt-dlp
-pytube
+yt-dlp==2025.10.22
+pytube==15.0.0
 
-assemblyai
+assemblyai==0.44.3
 
-motor
+motor==3.7.1
 
-passlib[bycrpt]
-python-jose[cryptography]
+passlib[bycrpt]==1.7.4
+python-jose[cryptography]==3.5.0
 bcrypt==4.0.1

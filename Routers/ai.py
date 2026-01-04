@@ -73,7 +73,7 @@ async def doc_notes(doc: Annotated[UploadFile, File()], access: bool = Depends(g
         
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during text extraction from doc; \nTraceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured during doc notes generaion!")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error occured during doc notes generaion!")
 
 
 # notes from yt_transcript
@@ -94,7 +94,7 @@ async def yt_notes(user_input: Annotated[str, Form()], access: bool = Depends(ge
 
         # Returning Transcript
         if response.get("error", ""):
-            return {"message": response.get("error")}
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="error while processing yt-video")
         else:
             # return {"transcript": response.get("transcript")}
             print(f"\nTime: [{datetime.now()}]; Generating notes from transcript!")
@@ -110,7 +110,7 @@ async def yt_notes(user_input: Annotated[str, Form()], access: bool = Depends(ge
 
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during yt-notes generation; \nTraceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="error while processing yt-video")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="error while processing yt-video")
 
 
 # audio summary
@@ -153,7 +153,7 @@ async def audio_summary(audio: Annotated[UploadFile, File()], access: bool = Dep
 
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured in audio summary; \nTraceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured in audio summary!")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error occured in audio summary!")
     
 
 # career path guide
@@ -167,11 +167,11 @@ async def career_guide(user_skills: Annotated[str, Form()], user_edu: Annotated[
     try:
         print(f"\nTime: [{datetime.now()}]; User input Received!")
 
-        # user details
-        user_details = f"Skills: {user_skills}, Education/Experience: {user_edu}, Interest: {user_interest}, Career Goal: {career_goal}"
+        # user detail
+        user_detail = f"Skills: {user_skills}, Education/Experience: {user_edu}, Interest: {user_interest}, Career Goal: {career_goal}"
 
         # Generate Roadmap for user 
-        agent_response = lg_agent.invoke({"messages": [HumanMessage(content=f"Create a Structured career path for following {user_details}")]})
+        agent_response = lg_agent.invoke({"messages": [HumanMessage(content=f"Create a Structured career path for following {user_detail}")]})
 
         print(f"Time: [{datetime.now()}]; Career Path Generated!")
 
@@ -181,4 +181,4 @@ async def career_guide(user_skills: Annotated[str, Form()], user_edu: Annotated[
     
     except Exception as e:
         print(f"\nTime: [{datetime.now()}]; Error occured during generating career path; \nTraceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, details="Error occured during invoking Agent!") 
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error occured during invoking Agent!") 
